@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, createContext, useContext } from 'react';
 import {
   View,
   Text,
@@ -13,13 +13,21 @@ import {
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 type RootStackParamList = {
   Login: undefined;
+  MainTabs: undefined;
+};
+
+type TabParamList = {
   Home: undefined;
+  AddMeal: undefined;
+  Filter: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
+const Tab = createBottomTabNavigator<TabParamList>();
 
 // ====== TYPES ======
 type Meal = {
@@ -30,13 +38,57 @@ type Meal = {
   type: 'starter' | 'main' | 'dessert' | 'fastfood';
 };
 
+// ====== CONTEXT ======
+type MealsContextType = {
+  meals: Meal[];
+  setMeals: React.Dispatch<React.SetStateAction<Meal[]>>;
+  cart: Meal[];
+  setCart: React.Dispatch<React.SetStateAction<Meal[]>>;
+  filterType: 'all' | 'starter' | 'main' | 'fastfood' | 'dessert';
+  setFilterType: React.Dispatch<React.SetStateAction<'all' | 'starter' | 'main' | 'fastfood' | 'dessert'>>;
+  search: string;
+  setSearch: React.Dispatch<React.SetStateAction<string>>;
+};
+
+const MealsContext = createContext<MealsContextType | undefined>(undefined);
+
+export const useMeals = () => {
+  const context = useContext(MealsContext);
+  if (!context) {
+    throw new Error('useMeals must be used within MealsProvider');
+  }
+  return context;
+};
+
+// ====== MEALS PROVIDER ======
+function MealsProvider({ children }: { children: React.ReactNode }) {
+  const [meals, setMeals] = useState<Meal[]>([
+    { name: 'Vegetable Salad', price: '10', image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c', description: 'Fresh mixed vegetables with dressing', type: 'starter' },
+    { name: 'Lentil Soup', price: '8', image: 'https://images.pexels.com/photos/539451/pexels-photo-539451.jpeg', description: 'Warm and hearty lentil soup', type: 'starter' },
+    { name: 'Beef Burger', price: '15', image: 'https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=80&q=80', description: 'Juicy beef patty with fresh vegetables', type: 'fastfood' },
+    { name: 'Margherita Pizza', price: '12', image: 'https://images.pexels.com/photos/10836977/pexels-photo-10836977.jpeg', description: 'Classic pizza with tomato and mozzarella', type: 'fastfood' },
+    { name: 'Cheesecake', price: '9', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjOSkPERVYz6sVua0XzIQeUM2vxxuaX-6nQA&s', description: 'Creamy and delicious cheesecake', type: 'dessert' },
+    { name: 'Chocolate Brownie', price: '7', image: 'https://th.bing.com/th/id/OIP.LzD5bFDUFDGJ4jcMuUtcXAHaHa?w=202&h=202&c=7&r=0&o=7&cb=12&dpr=1.3&pid=1.7&rm=3', description: 'Rich chocolate brownie with fudge', type: 'dessert' },
+  ]);
+
+  const [cart, setCart] = useState<Meal[]>([]);
+  const [filterType, setFilterType] = useState<'all' | 'starter' | 'main' | 'fastfood' | 'dessert'>('all');
+  const [search, setSearch] = useState('');
+
+  return (
+    <MealsContext.Provider value={{ meals, setMeals, cart, setCart, filterType, setFilterType, search, setSearch }}>
+      {children}
+    </MealsContext.Provider>
+  );
+}
+
 // ====== LOGIN SCREEN ======
 function LoginScreen({ navigation }: any) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleLogin = () => {
-    if (email && password) navigation.replace('Home');
+    if (email && password) navigation.replace('MainTabs');
     else Alert.alert('Error', 'Please enter your email and password');
   };
 
@@ -60,20 +112,7 @@ function LoginScreen({ navigation }: any) {
 
 // ====== HOME SCREEN ======
 function HomeScreen() {
-const [meals, setMeals] = useState<Meal[]>([
-  { name: 'Vegetable Salad', price: '10', image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c', description: 'Fresh mixed vegetables with dressing', type: 'starter' },
-  { name: 'Lentil Soup', price: '8', image: 'https://images.pexels.com/photos/539451/pexels-photo-539451.jpeg', description: 'Warm and hearty lentil soup', type: 'starter' },
-  { name: 'Beef Burger', price: '15', image: 'https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=80&q=80', description: 'Juicy beef patty with fresh vegetables', type: 'fastfood' },
-  { name: 'Margherita Pizza', price: '12', image: 'https://images.pexels.com/photos/10836977/pexels-photo-10836977.jpeg', description: 'Classic pizza with tomato and mozzarella', type: 'fastfood' },
-  { name: 'Cheesecake', price: '9', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjOSkPERVYz6sVua0XzIQeUM2vxxuaX-6nQA&s', description: 'Creamy and delicious cheesecake', type: 'dessert' },
-  { name: 'Chocolate Brownie', price: '7', image: 'https://th.bing.com/th/id/OIP.LzD5bFDUFDGJ4jcMuUtcXAHaHa?w=202&h=202&c=7&r=0&o=7&cb=12&dpr=1.3&pid=1.7&rm=3', description: 'Rich chocolate brownie with fudge', type: 'dessert' },
-]);
-
-  const [cart, setCart] = useState<Meal[]>([]);
-  const [search, setSearch] = useState('');
-  const [filterType, setFilterType] = useState<'all' | 'starter' | 'main' | 'fastfood' | 'dessert'>('all');
-  const [newMeal, setNewMeal] = useState({ name: '', price: '', image: '', description: '', type: 'fastfood' as 'starter' | 'main' | 'dessert' | 'fastfood' });
-
+  const { meals, cart, setCart, filterType, search, setSearch } = useMeals();
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -83,16 +122,6 @@ const [meals, setMeals] = useState<Meal[]>([
       useNativeDriver: true,
     }).start();
   }, []);
-
-  const handleAddMeal = () => {
-    if (!newMeal.name || !newMeal.price || !newMeal.image || !newMeal.description) {
-      Alert.alert('Error', 'Please fill all fields including description!');
-      return;
-    }
-    setMeals([...meals, { ...newMeal }]);
-    setNewMeal({ name: '', price: '', image: '', description: '', type: 'fastfood' });
-    Alert.alert('Added', 'New meal added successfully!');
-  };
 
   const handleAddToCart = (meal: Meal) => {
     setCart([...cart, meal]);
@@ -157,65 +186,97 @@ const [meals, setMeals] = useState<Meal[]>([
 
   return (
     <SafeAreaView style={styles.safeArea}>
-    <ScrollView style={styles.container}>
-      <Text style={styles.header}>🍽️ Food Menu</Text>
+      <ScrollView style={styles.container}>
+        <Text style={styles.header}>🍽️ Food Menu</Text>
 
-      {/* AVERAGE PRICES BY COURSE */}
-      <View style={styles.averagePricesContainer}>
-        <Text style={styles.averagePricesTitle}>📊 Average Prices by Course</Text>
-        <View style={styles.averagePricesGrid}>
-          {Object.keys(averagePrices).map((courseType) => {
-            const avgPrice = averagePrices[courseType];
-            const courseCount = meals.filter(m => m.type === courseType).length;
-            return (
-              <View key={courseType} style={styles.averagePriceCard}>
-                <Text style={styles.averagePriceLabel}>
-                  {courseType.charAt(0).toUpperCase() + courseType.slice(1)}
-                </Text>
-                {courseCount > 0 ? (
-                  <Text style={styles.averagePriceValue}>${avgPrice.toFixed(2)}</Text>
-                ) : (
-                  <Text style={styles.averagePriceValue}>N/A</Text>
-                )}
-                <Text style={styles.averagePriceCount}>({courseCount} items)</Text>
-              </View>
-            );
-          })}
+        {/* AVERAGE PRICES BY COURSE */}
+        <View style={styles.averagePricesContainer}>
+          <Text style={styles.averagePricesTitle}>📊 Average Prices by Course</Text>
+          <View style={styles.averagePricesGrid}>
+            {Object.keys(averagePrices).map((courseType) => {
+              const avgPrice = averagePrices[courseType];
+              const courseCount = meals.filter(m => m.type === courseType).length;
+              return (
+                <View key={courseType} style={styles.averagePriceCard}>
+                  <Text style={styles.averagePriceLabel}>
+                    {courseType.charAt(0).toUpperCase() + courseType.slice(1)}
+                  </Text>
+                  {courseCount > 0 ? (
+                    <Text style={styles.averagePriceValue}>${avgPrice.toFixed(2)}</Text>
+                  ) : (
+                    <Text style={styles.averagePriceValue}>N/A</Text>
+                  )}
+                  <Text style={styles.averagePriceCount}>({courseCount} items)</Text>
+                </View>
+              );
+            })}
+          </View>
         </View>
-      </View>
 
-      {/* SEARCH */}
-      <TextInput
-        placeholder="Search by meal name..."
-        value={search}
-        onChangeText={setSearch}
-        style={styles.searchInput}
-      />
-
-      {/* FILTER BUTTONS */}
-      <View style={styles.filterContainer}>
-          {['all', 'starter', 'main', 'fastfood', 'dessert'].map((type, i) => (
-          <TouchableOpacity
-            key={i}
-            style={[styles.filterButton, filterType === type && styles.activeFilter]}
-            onPress={() => setFilterType(type as any)}
-          >
-              <Text style={[styles.filterText, filterType === type && styles.activeFilterText]}>
-              {type === 'all' ? 'All' : type.charAt(0).toUpperCase() + type.slice(1)}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-
-      {/* ADD NEW MEAL */}
-      <View style={styles.addMealContainer}>
-        <Text style={styles.addMealTitle}>➕ Add New Meal</Text>
+        {/* SEARCH */}
         <TextInput
-          placeholder="Meal name"
-          value={newMeal.name}
-          onChangeText={text => setNewMeal({ ...newMeal, name: text })}
-          style={styles.input}
+          placeholder="Search by meal name..."
+          value={search}
+          onChangeText={setSearch}
+          style={styles.searchInput}
         />
+
+        {/* MEALS LIST */}
+        <Animated.View style={{ opacity: fadeAnim }}>
+          {filteredMeals.map((meal, i) => (
+            <View key={i} style={styles.mealCard}>
+              <Image source={{ uri: meal.image }} style={styles.mealImage} />
+              <View style={{ flex: 1 }}>
+                <Text style={styles.mealName}>{meal.name}</Text>
+                <Text style={styles.mealDescription}>{meal.description}</Text>
+                <Text style={styles.mealPrice}>${meal.price}</Text>
+              </View>
+              <TouchableOpacity
+                style={styles.addButtonSmall}
+                onPress={() => handleAddToCart(meal)}
+              >
+                <Text style={styles.addButtonText}>+</Text>
+              </TouchableOpacity>
+            </View>
+          ))}
+        </Animated.View>
+
+        {/* CART TOTAL */}
+        <View style={styles.cartContainer}>
+          <Text style={styles.cartText}>🛒 Total Items: {cart.length}</Text>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+// ====== ADD MEAL SCREEN ======
+function AddMealScreen() {
+  const { setMeals } = useMeals();
+  const [newMeal, setNewMeal] = useState({ name: '', price: '', image: '', description: '', type: 'fastfood' as 'starter' | 'main' | 'dessert' | 'fastfood' });
+
+  const handleAddMeal = () => {
+    if (!newMeal.name || !newMeal.price || !newMeal.image || !newMeal.description) {
+      Alert.alert('Error', 'Please fill all fields including description!');
+      return;
+    }
+    setMeals((prevMeals) => [...prevMeals, { ...newMeal }]);
+    setNewMeal({ name: '', price: '', image: '', description: '', type: 'fastfood' });
+    Alert.alert('Added', 'New meal added successfully!');
+  };
+
+  return (
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView style={styles.container}>
+        <Text style={styles.header}>➕ Add New Meal</Text>
+
+        <View style={styles.addMealContainer}>
+          <TextInput
+            placeholder="Meal name"
+            value={newMeal.name}
+            onChangeText={text => setNewMeal({ ...newMeal, name: text })}
+            style={styles.input}
+          />
           <TextInput
             placeholder="Description"
             value={newMeal.description}
@@ -224,19 +285,19 @@ const [meals, setMeals] = useState<Meal[]>([
             multiline
             numberOfLines={2}
           />
-        <TextInput
-          placeholder="Price"
-          keyboardType="numeric"
-          value={newMeal.price}
-          onChangeText={text => setNewMeal({ ...newMeal, price: text })}
-          style={styles.input}
-        />
-        <TextInput
-          placeholder="Image URL"
-          value={newMeal.image}
-          onChangeText={text => setNewMeal({ ...newMeal, image: text })}
-          style={styles.input}
-        />
+          <TextInput
+            placeholder="Price"
+            keyboardType="numeric"
+            value={newMeal.price}
+            onChangeText={text => setNewMeal({ ...newMeal, price: text })}
+            style={styles.input}
+          />
+          <TextInput
+            placeholder="Image URL"
+            value={newMeal.image}
+            onChangeText={text => setNewMeal({ ...newMeal, image: text })}
+            style={styles.input}
+          />
           {/* CATEGORY SELECTION */}
           <Text style={styles.categoryLabel}>Category:</Text>
           <View style={styles.categoryContainer}>
@@ -258,37 +319,111 @@ const [meals, setMeals] = useState<Meal[]>([
               </TouchableOpacity>
             ))}
           </View>
-        <TouchableOpacity style={styles.addButtonMain} onPress={handleAddMeal}>
-          <Text style={styles.addButtonText}>Add Meal</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* MEALS LIST */}
-      <Animated.View style={{ opacity: fadeAnim }}>
-        {filteredMeals.map((meal, i) => (
-          <View key={i} style={styles.mealCard}>
-            <Image source={{ uri: meal.image }} style={styles.mealImage} />
-            <View style={{ flex: 1 }}>
-              <Text style={styles.mealName}>{meal.name}</Text>
-                <Text style={styles.mealDescription}>{meal.description}</Text>
-              <Text style={styles.mealPrice}>${meal.price}</Text>
-            </View>
-            <TouchableOpacity
-              style={styles.addButtonSmall}
-              onPress={() => handleAddToCart(meal)}
-            >
-              <Text style={styles.addButtonText}>+</Text>
-            </TouchableOpacity>
-          </View>
-        ))}
-      </Animated.View>
-
-      {/* CART TOTAL */}
-      <View style={styles.cartContainer}>
-          <Text style={styles.cartText}>🛒 Total Items: {cart.length}</Text>
-      </View>
-    </ScrollView>
+          <TouchableOpacity style={styles.addButtonMain} onPress={handleAddMeal}>
+            <Text style={styles.addButtonText}>Add Meal</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
     </SafeAreaView>
+  );
+}
+
+// ====== FILTER SCREEN ======
+function FilterScreen() {
+  const { filterType, setFilterType, search, setSearch } = useMeals();
+
+  return (
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView style={styles.container}>
+        <Text style={styles.header}>🔍 Filter Meals</Text>
+
+        {/* SEARCH */}
+        <View style={styles.filterSection}>
+          <Text style={styles.filterSectionTitle}>Search</Text>
+          <TextInput
+            placeholder="Search by meal name..."
+            value={search}
+            onChangeText={setSearch}
+            style={styles.searchInput}
+          />
+        </View>
+
+        {/* FILTER BY CATEGORY */}
+        <View style={styles.filterSection}>
+          <Text style={styles.filterSectionTitle}>Filter by Category</Text>
+          <View style={styles.filterContainer}>
+            {['all', 'starter', 'main', 'fastfood', 'dessert'].map((type, i) => (
+              <TouchableOpacity
+                key={i}
+                style={[styles.filterButton, filterType === type && styles.activeFilter]}
+                onPress={() => setFilterType(type as any)}
+              >
+                <Text style={[styles.filterText, filterType === type && styles.activeFilterText]}>
+                  {type === 'all' ? 'All' : type.charAt(0).toUpperCase() + type.slice(1)}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+
+        {/* ACTIVE FILTERS INFO */}
+        <View style={styles.filterInfoContainer}>
+          <Text style={styles.filterInfoTitle}>Active Filters:</Text>
+          <Text style={styles.filterInfoText}>
+            Category: {filterType === 'all' ? 'All' : filterType.charAt(0).toUpperCase() + filterType.slice(1)}
+          </Text>
+          {search && (
+            <Text style={styles.filterInfoText}>
+              Search: "{search}"
+            </Text>
+          )}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+// ====== TAB NAVIGATOR ======
+function TabNavigator() {
+  return (
+    <Tab.Navigator
+      screenOptions={{
+        headerShown: false,
+        tabBarActiveTintColor: '#ff7f50',
+        tabBarInactiveTintColor: '#gray',
+        tabBarStyle: {
+          paddingBottom: 5,
+          paddingTop: 5,
+          height: 60,
+          backgroundColor: '#fff',
+        },
+      }}
+    >
+      <Tab.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{
+          tabBarLabel: 'Home',
+          tabBarIcon: () => <Text style={styles.tabIcon}>🏠</Text>,
+        }}
+      />
+      <Tab.Screen
+        name="AddMeal"
+        component={AddMealScreen}
+        options={{
+          tabBarLabel: 'Add Meal',
+          tabBarIcon: () => <Text style={styles.tabIcon}>➕</Text>,
+        }}
+      />
+      <Tab.Screen
+        name="Filter"
+        component={FilterScreen}
+        options={{
+          tabBarLabel: 'Filter',
+          tabBarIcon: () => <Text style={styles.tabIcon}>🔍</Text>,
+        }}
+      />
+    </Tab.Navigator>
   );
 }
 
@@ -296,12 +431,14 @@ const [meals, setMeals] = useState<Meal[]>([
 export default function App() {
   return (
     <SafeAreaProvider>
-      <NavigationContainer>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="Login" component={LoginScreen} />
-          <Stack.Screen name="Home" component={HomeScreen} />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <MealsProvider>
+        <NavigationContainer>
+          <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="Login" component={LoginScreen} />
+            <Stack.Screen name="MainTabs" component={TabNavigator} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </MealsProvider>
     </SafeAreaProvider>
   );
 }
@@ -356,4 +493,10 @@ const styles = StyleSheet.create({
   averagePriceLabel: { fontSize: 12, fontWeight: '600', color: '#666', marginBottom: 4 },
   averagePriceValue: { fontSize: 18, fontWeight: 'bold', color: '#ff7f50', marginBottom: 2 },
   averagePriceCount: { fontSize: 10, color: '#999' },
+  filterSection: { marginBottom: 20 },
+  filterSectionTitle: { fontSize: 18, fontWeight: '600', marginBottom: 10, color: '#333' },
+  filterInfoContainer: { backgroundColor: '#f0f8ff', padding: 15, borderRadius: 10, marginTop: 20 },
+  filterInfoTitle: { fontSize: 16, fontWeight: 'bold', marginBottom: 8, color: '#333' },
+  filterInfoText: { fontSize: 14, color: '#666', marginBottom: 4 },
+  tabIcon: { fontSize: 24 },
 });

@@ -35,7 +35,7 @@ type Meal = {
   price: string;
   image: string;
   description: string;
-  type: 'starter' | 'main' | 'dessert' | 'fastfood';
+  type: 'starter' | 'main' | 'dessert';
 };
 
 // ====== CONTEXT ======
@@ -44,8 +44,8 @@ type MealsContextType = {
   setMeals: React.Dispatch<React.SetStateAction<Meal[]>>;
   cart: Meal[];
   setCart: React.Dispatch<React.SetStateAction<Meal[]>>;
-  filterType: 'all' | 'starter' | 'main' | 'fastfood' | 'dessert';
-  setFilterType: React.Dispatch<React.SetStateAction<'all' | 'starter' | 'main' | 'fastfood' | 'dessert'>>;
+  filterType: 'all' | 'starter' | 'main' | 'dessert';
+  setFilterType: React.Dispatch<React.SetStateAction<'all' | 'starter' | 'main' | 'dessert'>>;
   search: string;
   setSearch: React.Dispatch<React.SetStateAction<string>>;
 };
@@ -65,15 +65,33 @@ function MealsProvider({ children }: { children: React.ReactNode }) {
   const [meals, setMeals] = useState<Meal[]>([
     { name: 'Vegetable Salad', price: '10', image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c', description: 'Fresh mixed vegetables with dressing', type: 'starter' },
     { name: 'Lentil Soup', price: '8', image: 'https://images.pexels.com/photos/539451/pexels-photo-539451.jpeg', description: 'Warm and hearty lentil soup', type: 'starter' },
-    { name: 'Beef Burger', price: '15', image: 'https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=80&q=80', description: 'Juicy beef patty with fresh vegetables', type: 'fastfood' },
-    { name: 'Margherita Pizza', price: '12', image: 'https://images.pexels.com/photos/10836977/pexels-photo-10836977.jpeg', description: 'Classic pizza with tomato and mozzarella', type: 'fastfood' },
+    { name: 'Beef Burger', price: '15', image: 'https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=80&q=80', description: 'Juicy beef patty with fresh vegetables', type: 'main' },
+    { name: 'Margherita Pizza', price: '12', image: 'https://images.pexels.com/photos/10836977/pexels-photo-10836977.jpeg', description: 'Classic pizza with tomato and mozzarella', type: 'main' },
     { name: 'Cheesecake', price: '9', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjOSkPERVYz6sVua0XzIQeUM2vxxuaX-6nQA&s', description: 'Creamy and delicious cheesecake', type: 'dessert' },
     { name: 'Chocolate Brownie', price: '7', image: 'https://th.bing.com/th/id/OIP.LzD5bFDUFDGJ4jcMuUtcXAHaHa?w=202&h=202&c=7&r=0&o=7&cb=12&dpr=1.3&pid=1.7&rm=3', description: 'Rich chocolate brownie with fudge', type: 'dessert' },
   ]);
 
   const [cart, setCart] = useState<Meal[]>([]);
-  const [filterType, setFilterType] = useState<'all' | 'starter' | 'main' | 'fastfood' | 'dessert'>('all');
+  const [filterType, setFilterType] = useState<'all' | 'starter' | 'main' | 'dessert'>('all');
   const [search, setSearch] = useState('');
+
+  // Migrate any fastfood items to main and reset filter if needed (safety check)
+  useEffect(() => {
+    setMeals((prevMeals) => {
+      const hasFastfood = prevMeals.some(meal => (meal as any).type === 'fastfood');
+      if (hasFastfood) {
+        return prevMeals.map(meal => 
+          (meal as any).type === 'fastfood' ? { ...meal, type: 'main' } : meal
+        ) as Meal[];
+      }
+      return prevMeals;
+    });
+    
+    // Reset filter if it's set to fastfood
+    if ((filterType as any) === 'fastfood') {
+      setFilterType('all');
+    }
+  }, []);
 
   return (
     <MealsContext.Provider value={{ meals, setMeals, cart, setCart, filterType, setFilterType, search, setSearch }}>
@@ -135,7 +153,7 @@ function HomeScreen() {
   );
 
   // Function to get meals by course type using while loop
-  function getMealsByType(courseType: 'starter' | 'main' | 'dessert' | 'fastfood'): Meal[] {
+  function getMealsByType(courseType: 'starter' | 'main' | 'dessert'): Meal[] {
     const filteredMealsList: Meal[] = [];
     let index = 0;
 
@@ -151,7 +169,7 @@ function HomeScreen() {
   }
 
   // Function to calculate average price for a specific course type
-  function calculateAveragePriceForType(courseType: 'starter' | 'main' | 'dessert' | 'fastfood'): number {
+  function calculateAveragePriceForType(courseType: 'starter' | 'main' | 'dessert'): number {
     const courseMeals = getMealsByType(courseType);
     
     if (courseMeals.length === 0) {
@@ -169,7 +187,7 @@ function HomeScreen() {
 
   // Function to calculate average prices by course type
   function calculateAveragePrices(): Record<string, number> {
-    const courseTypes: ('starter' | 'main' | 'dessert' | 'fastfood')[] = ['starter', 'main', 'dessert', 'fastfood'];
+    const courseTypes: ('starter' | 'main' | 'dessert')[] = ['starter', 'main', 'dessert'];
     const averages: Record<string, number> = {};
 
     // Use for loop to iterate through course types
@@ -252,8 +270,8 @@ function HomeScreen() {
 
 // ====== ADD MEAL SCREEN ======
 function AddMealScreen() {
-  const { setMeals } = useMeals();
-  const [newMeal, setNewMeal] = useState({ name: '', price: '', image: '', description: '', type: 'fastfood' as 'starter' | 'main' | 'dessert' | 'fastfood' });
+  const { meals, setMeals } = useMeals();
+  const [newMeal, setNewMeal] = useState({ name: '', price: '', image: '', description: '', type: 'main' as 'starter' | 'main' | 'dessert' });
 
   const handleAddMeal = () => {
     if (!newMeal.name || !newMeal.price || !newMeal.image || !newMeal.description) {
@@ -261,16 +279,39 @@ function AddMealScreen() {
       return;
     }
     setMeals((prevMeals) => [...prevMeals, { ...newMeal }]);
-    setNewMeal({ name: '', price: '', image: '', description: '', type: 'fastfood' });
+    setNewMeal({ name: '', price: '', image: '', description: '', type: 'main' });
     Alert.alert('Added', 'New meal added successfully!');
+  };
+
+  const handleRemoveMeal = (index: number, mealName: string) => {
+    Alert.alert(
+      'Remove Meal',
+      `Are you sure you want to remove "${mealName}" from the menu?`,
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Remove',
+          style: 'destructive',
+          onPress: () => {
+            setMeals((prevMeals) => prevMeals.filter((_, i) => i !== index));
+            Alert.alert('Removed', `${mealName} has been removed from the menu.`);
+          },
+        },
+      ]
+    );
   };
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView style={styles.container}>
-        <Text style={styles.header}>➕ Add New Meal</Text>
+        <Text style={styles.header}>🍽️ Manage Menu</Text>
 
+        {/* ADD NEW MEAL SECTION */}
         <View style={styles.addMealContainer}>
+          <Text style={styles.sectionTitle}>➕ Add New Meal</Text>
           <TextInput
             placeholder="Meal name"
             value={newMeal.name}
@@ -301,7 +342,7 @@ function AddMealScreen() {
           {/* CATEGORY SELECTION */}
           <Text style={styles.categoryLabel}>Category:</Text>
           <View style={styles.categoryContainer}>
-            {(['starter', 'main', 'fastfood', 'dessert'] as const).map((type) => (
+            {(['starter', 'main', 'dessert'] as const).map((type) => (
               <TouchableOpacity
                 key={type}
                 style={[
@@ -322,6 +363,38 @@ function AddMealScreen() {
           <TouchableOpacity style={styles.addButtonMain} onPress={handleAddMeal}>
             <Text style={styles.addButtonText}>Add Meal</Text>
           </TouchableOpacity>
+        </View>
+
+        {/* MENU ITEMS LIST SECTION */}
+        <View style={styles.menuItemsContainer}>
+          <Text style={styles.sectionTitle}>📋 Current Menu Items ({meals.length})</Text>
+          {meals.length === 0 ? (
+            <View style={styles.emptyStateContainer}>
+              <Text style={styles.emptyStateText}>No menu items yet. Add your first meal above!</Text>
+            </View>
+          ) : (
+            meals.map((meal, index) => (
+              <View key={index} style={styles.manageMealCard}>
+                <Image source={{ uri: meal.image }} style={styles.manageMealImage} />
+                <View style={styles.manageMealInfo}>
+                  <Text style={styles.manageMealName}>{meal.name}</Text>
+                  <Text style={styles.manageMealDescription}>{meal.description}</Text>
+                  <View style={styles.manageMealDetails}>
+                    <Text style={styles.manageMealPrice}>${meal.price}</Text>
+                    <Text style={styles.manageMealType}>
+                      {meal.type.charAt(0).toUpperCase() + meal.type.slice(1)}
+                    </Text>
+                  </View>
+                </View>
+                <TouchableOpacity
+                  style={styles.removeButton}
+                  onPress={() => handleRemoveMeal(index, meal.name)}
+                >
+                  <Text style={styles.removeButtonText}>Remove</Text>
+                </TouchableOpacity>
+              </View>
+            ))
+          )}
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -352,7 +425,7 @@ function FilterScreen() {
         <View style={styles.filterSection}>
           <Text style={styles.filterSectionTitle}>Filter by Category</Text>
           <View style={styles.filterContainer}>
-            {['all', 'starter', 'main', 'fastfood', 'dessert'].map((type, i) => (
+            {['all', 'starter', 'main', 'dessert'].map((type, i) => (
               <TouchableOpacity
                 key={i}
                 style={[styles.filterButton, filterType === type && styles.activeFilter]}
@@ -411,8 +484,8 @@ function TabNavigator() {
         name="AddMeal"
         component={AddMealScreen}
         options={{
-          tabBarLabel: 'Add Meal',
-          tabBarIcon: () => <Text style={styles.tabIcon}>➕</Text>,
+          tabBarLabel: 'Manage Menu',
+          tabBarIcon: () => <Text style={styles.tabIcon}>🍽️</Text>,
         }}
       />
       <Tab.Screen
@@ -459,9 +532,58 @@ const styles = StyleSheet.create({
   mealName: { fontSize: 16, fontWeight: 'bold' },
   mealDescription: { fontSize: 12, color: '#666', marginTop: 2 },
   mealPrice: { color: '#ff7f50', fontWeight: 'bold', marginTop: 5 },
-  addMealContainer: { marginVertical: 20 },
+  addMealContainer: { marginVertical: 20, padding: 15, backgroundColor: '#f9f9f9', borderRadius: 10 },
   addMealTitle: { fontSize: 18, fontWeight: '600', marginBottom: 10 },
+  sectionTitle: { fontSize: 18, fontWeight: '600', marginBottom: 15, color: '#333' },
   categoryLabel: { fontSize: 14, fontWeight: '600', marginBottom: 8, marginTop: 5 },
+  menuItemsContainer: { marginTop: 20, marginBottom: 20 },
+  manageMealCard: { 
+    flexDirection: 'row', 
+    backgroundColor: '#fff', 
+    borderRadius: 10, 
+    padding: 12, 
+    marginBottom: 10, 
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  manageMealImage: { width: 70, height: 70, borderRadius: 10, marginRight: 12 },
+  manageMealInfo: { flex: 1 },
+  manageMealName: { fontSize: 16, fontWeight: 'bold', marginBottom: 4 },
+  manageMealDescription: { fontSize: 12, color: '#666', marginBottom: 6 },
+  manageMealDetails: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  manageMealPrice: { color: '#ff7f50', fontWeight: 'bold', fontSize: 14 },
+  manageMealType: { 
+    fontSize: 11, 
+    color: '#666', 
+    backgroundColor: '#f0f0f0', 
+    paddingHorizontal: 8, 
+    paddingVertical: 2, 
+    borderRadius: 10 
+  },
+  removeButton: { 
+    backgroundColor: '#ff4444', 
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 8, 
+    justifyContent: 'center', 
+    alignItems: 'center',
+    marginLeft: 10,
+  },
+  removeButtonText: { fontSize: 16, color: '#fff', fontWeight: 'bold' },
+  emptyStateContainer: { 
+    padding: 30, 
+    alignItems: 'center', 
+    backgroundColor: '#f9f9f9', 
+    borderRadius: 10,
+    marginTop: 10,
+  },
+  emptyStateText: { fontSize: 14, color: '#666', textAlign: 'center' },
   categoryContainer: { flexDirection: 'row', flexWrap: 'wrap', marginBottom: 10 },
   categoryButton: { borderWidth: 1, borderColor: '#ff7f50', borderRadius: 20, paddingVertical: 6, paddingHorizontal: 15, marginRight: 8, marginBottom: 8 },
   activeCategoryButton: { backgroundColor: '#ff7f50' },

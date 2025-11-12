@@ -14,6 +14,7 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Ionicons } from '@expo/vector-icons';
 
 type RootStackParamList = {
   Login: undefined;
@@ -31,6 +32,7 @@ const Tab = createBottomTabNavigator<TabParamList>();
 
 // ====== TYPES ======
 type Meal = {
+  id: string; // Unique identifier for each meal
   name: string;
   price: string;
   image: string;
@@ -62,36 +64,47 @@ export const useMeals = () => {
 
 // ====== MEALS PROVIDER ======
 function MealsProvider({ children }: { children: React.ReactNode }) {
+  // Menu items are stored in an array data structure
   const [meals, setMeals] = useState<Meal[]>([
-    { name: 'Vegetable Salad', price: '10', image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c', description: 'Fresh mixed vegetables with dressing', type: 'starter' },
-    { name: 'Lentil Soup', price: '8', image: 'https://images.pexels.com/photos/539451/pexels-photo-539451.jpeg', description: 'Warm and hearty lentil soup', type: 'starter' },
-    { name: 'Beef Burger', price: '15', image: 'https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=80&q=80', description: 'Juicy beef patty with fresh vegetables', type: 'main' },
-    { name: 'Margherita Pizza', price: '12', image: 'https://images.pexels.com/photos/10836977/pexels-photo-10836977.jpeg', description: 'Classic pizza with tomato and mozzarella', type: 'main' },
-    { name: 'Cheesecake', price: '9', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjOSkPERVYz6sVua0XzIQeUM2vxxuaX-6nQA&s', description: 'Creamy and delicious cheesecake', type: 'dessert' },
-    { name: 'Chocolate Brownie', price: '7', image: 'https://th.bing.com/th/id/OIP.LzD5bFDUFDGJ4jcMuUtcXAHaHa?w=202&h=202&c=7&r=0&o=7&cb=12&dpr=1.3&pid=1.7&rm=3', description: 'Rich chocolate brownie with fudge', type: 'dessert' },
+    { id: '1', name: 'Vegetable Salad', price: '10', image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c', description: 'Fresh mixed vegetables with dressing', type: 'starter' },
+    { id: '2', name: 'Lentil Soup', price: '8', image: 'https://images.pexels.com/photos/539451/pexels-photo-539451.jpeg', description: 'Warm and hearty lentil soup', type: 'starter' },
+    { id: '3', name: 'Beef Burger', price: '15', image: 'https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=80&q=80', description: 'Juicy beef patty with fresh vegetables', type: 'main' },
+    { id: '4', name: 'Margherita Pizza', price: '12', image: 'https://images.pexels.com/photos/10836977/pexels-photo-10836977.jpeg', description: 'Classic pizza with tomato and mozzarella', type: 'main' },
+    { id: '5', name: 'Cheesecake', price: '9', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjOSkPERVYz6sVua0XzIQeUM2vxxuaX-6nQA&s', description: 'Creamy and delicious cheesecake', type: 'dessert' },
+    { id: '6', name: 'Chocolate Brownie', price: '7', image: 'https://th.bing.com/th/id/OIP.LzD5bFDUFDGJ4jcMuUtcXAHaHa?w=202&h=202&c=7&r=0&o=7&cb=12&dpr=1.3&pid=1.7&rm=3', description: 'Rich chocolate brownie with fudge', type: 'dessert' },
   ]);
 
   const [cart, setCart] = useState<Meal[]>([]);
   const [filterType, setFilterType] = useState<'all' | 'starter' | 'main' | 'dessert'>('all');
   const [search, setSearch] = useState('');
 
-  // Migrate any fastfood items to main and reset filter if needed (safety check)
-  useEffect(() => {
-    setMeals((prevMeals) => {
-      const hasFastfood = prevMeals.some(meal => (meal as any).type === 'fastfood');
-      if (hasFastfood) {
-        return prevMeals.map(meal => 
-          (meal as any).type === 'fastfood' ? { ...meal, type: 'main' } : meal
-        ) as Meal[];
+    // Migrate any fastfood items to main and reset filter if needed (safety check)
+    // Also ensure all meals have an ID (for backward compatibility)
+    useEffect(() => {
+      setMeals((prevMeals) => {
+        let updated = false;
+        const migratedMeals = prevMeals.map((meal, index) => {
+          // Add ID if missing
+          if (!meal.id) {
+            updated = true;
+            return { ...meal, id: `meal-${Date.now()}-${index}` };
+          }
+          // Migrate fastfood to main
+          if ((meal as any).type === 'fastfood') {
+            updated = true;
+            return { ...meal, type: 'main' };
+          }
+          return meal;
+        }) as Meal[];
+        
+        return updated ? migratedMeals : prevMeals;
+      });
+      
+      // Reset filter if it's set to fastfood
+      if ((filterType as any) === 'fastfood') {
+        setFilterType('all');
       }
-      return prevMeals;
-    });
-    
-    // Reset filter if it's set to fastfood
-    if ((filterType as any) === 'fastfood') {
-      setFilterType('all');
-    }
-  }, []);
+    }, []);
 
   return (
     <MealsContext.Provider value={{ meals, setMeals, cart, setCart, filterType, setFilterType, search, setSearch }}>
@@ -205,11 +218,17 @@ function HomeScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView style={styles.container}>
-        <Text style={styles.header}>🍽️ Food Menu</Text>
+        <View style={styles.headerContainer}>
+          <Ionicons name="restaurant" size={28} color="#ff7f50" />
+          <Text style={styles.header}>Food Menu</Text>
+        </View>
 
         {/* AVERAGE PRICES BY COURSE */}
         <View style={styles.averagePricesContainer}>
-          <Text style={styles.averagePricesTitle}>📊 Average Prices by Course</Text>
+          <View style={styles.sectionHeaderContainer}>
+            <Ionicons name="stats-chart" size={20} color="#333" />
+            <Text style={[styles.averagePricesTitle, { marginLeft: 8 }]}>Average Prices by Course</Text>
+          </View>
           <View style={styles.averagePricesGrid}>
             {Object.keys(averagePrices).map((courseType) => {
               const avgPrice = averagePrices[courseType];
@@ -241,8 +260,8 @@ function HomeScreen() {
 
         {/* MEALS LIST */}
         <Animated.View style={{ opacity: fadeAnim }}>
-          {filteredMeals.map((meal, i) => (
-            <View key={i} style={styles.mealCard}>
+          {filteredMeals.map((meal) => (
+            <View key={meal.id} style={styles.mealCard}>
               <Image source={{ uri: meal.image }} style={styles.mealImage} />
               <View style={{ flex: 1 }}>
                 <Text style={styles.mealName}>{meal.name}</Text>
@@ -273,17 +292,21 @@ function AddMealScreen() {
   const { meals, setMeals } = useMeals();
   const [newMeal, setNewMeal] = useState({ name: '', price: '', image: '', description: '', type: 'main' as 'starter' | 'main' | 'dessert' });
 
+  // Add meal to the meals array
   const handleAddMeal = () => {
     if (!newMeal.name || !newMeal.price || !newMeal.image || !newMeal.description) {
       Alert.alert('Error', 'Please fill all fields including description!');
       return;
     }
-    setMeals((prevMeals) => [...prevMeals, { ...newMeal }]);
+    // Generate unique ID and add new meal to the array
+    const mealId = Date.now().toString();
+    setMeals((prevMeals) => [...prevMeals, { ...newMeal, id: mealId }]);
     setNewMeal({ name: '', price: '', image: '', description: '', type: 'main' });
     Alert.alert('Added', 'New meal added successfully!');
   };
 
-  const handleRemoveMeal = (index: number, mealName: string) => {
+  // Remove meal from the meals array using unique ID
+  const handleRemoveMeal = (mealId: string, mealName: string) => {
     Alert.alert(
       'Remove Meal',
       `Are you sure you want to remove "${mealName}" from the menu?`,
@@ -296,7 +319,8 @@ function AddMealScreen() {
           text: 'Remove',
           style: 'destructive',
           onPress: () => {
-            setMeals((prevMeals) => prevMeals.filter((_, i) => i !== index));
+            // Remove meal from array by filtering out the item with matching ID
+            setMeals((prevMeals) => prevMeals.filter((meal) => meal.id !== mealId));
             Alert.alert('Removed', `${mealName} has been removed from the menu.`);
           },
         },
@@ -307,11 +331,17 @@ function AddMealScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView style={styles.container}>
-        <Text style={styles.header}>🍽️ Manage Menu</Text>
+        <View style={styles.headerContainer}>
+          <Ionicons name="settings" size={28} color="#ff7f50" />
+          <Text style={styles.header}>Manage Menu</Text>
+        </View>
 
         {/* ADD NEW MEAL SECTION */}
         <View style={styles.addMealContainer}>
-          <Text style={styles.sectionTitle}>➕ Add New Meal</Text>
+          <View style={styles.sectionHeaderContainer}>
+            <Ionicons name="add-circle" size={20} color="#333" />
+            <Text style={[styles.sectionTitle, { marginLeft: 8, marginBottom: 0 }]}>Add New Meal</Text>
+          </View>
           <TextInput
             placeholder="Meal name"
             value={newMeal.name}
@@ -367,14 +397,17 @@ function AddMealScreen() {
 
         {/* MENU ITEMS LIST SECTION */}
         <View style={styles.menuItemsContainer}>
-          <Text style={styles.sectionTitle}>📋 Current Menu Items ({meals.length})</Text>
+          <View style={styles.sectionHeaderContainer}>
+            <Ionicons name="list" size={20} color="#333" />
+            <Text style={[styles.sectionTitle, { marginLeft: 8, marginBottom: 0 }]}>Current Menu Items ({meals.length})</Text>
+          </View>
           {meals.length === 0 ? (
             <View style={styles.emptyStateContainer}>
               <Text style={styles.emptyStateText}>No menu items yet. Add your first meal above!</Text>
             </View>
           ) : (
-            meals.map((meal, index) => (
-              <View key={index} style={styles.manageMealCard}>
+            meals.map((meal) => (
+              <View key={meal.id} style={styles.manageMealCard}>
                 <Image source={{ uri: meal.image }} style={styles.manageMealImage} />
                 <View style={styles.manageMealInfo}>
                   <Text style={styles.manageMealName}>{meal.name}</Text>
@@ -388,7 +421,7 @@ function AddMealScreen() {
                 </View>
                 <TouchableOpacity
                   style={styles.removeButton}
-                  onPress={() => handleRemoveMeal(index, meal.name)}
+                  onPress={() => handleRemoveMeal(meal.id, meal.name)}
                 >
                   <Text style={styles.removeButtonText}>Remove</Text>
                 </TouchableOpacity>
@@ -403,7 +436,27 @@ function AddMealScreen() {
 
 // ====== FILTER SCREEN ======
 function FilterScreen() {
-  const { filterType, setFilterType, search, setSearch } = useMeals();
+  const { meals, cart, setCart, filterType, setFilterType, search, setSearch } = useMeals();
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 800,
+      useNativeDriver: true,
+    }).start();
+  }, []);
+
+  const handleAddToCart = (meal: Meal) => {
+    setCart([...cart, meal]);
+    Alert.alert('Added', `${meal.name} added to cart!`);
+  };
+
+  const filteredMeals = meals.filter(
+    m =>
+      (filterType === 'all' || m.type === filterType) &&
+      m.name.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -450,6 +503,43 @@ function FilterScreen() {
               Search: "{search}"
             </Text>
           )}
+          <Text style={styles.filterInfoText}>
+            Results: {filteredMeals.length} item(s)
+          </Text>
+        </View>
+
+        {/* FILTERED MEALS LIST */}
+        <View style={styles.filterSection}>
+          <Text style={styles.filterSectionTitle}>Filtered Meals</Text>
+          {filteredMeals.length === 0 ? (
+            <View style={styles.emptyStateContainer}>
+              <Text style={styles.emptyStateText}>No meals match your filters. Try adjusting your search or category.</Text>
+            </View>
+          ) : (
+            <Animated.View style={{ opacity: fadeAnim }}>
+              {filteredMeals.map((meal) => (
+                <View key={meal.id} style={styles.mealCard}>
+                  <Image source={{ uri: meal.image }} style={styles.mealImage} />
+                  <View style={{ flex: 1 }}>
+                    <Text style={styles.mealName}>{meal.name}</Text>
+                    <Text style={styles.mealDescription}>{meal.description}</Text>
+                    <Text style={styles.mealPrice}>${meal.price}</Text>
+                  </View>
+                  <TouchableOpacity
+                    style={styles.addButtonSmall}
+                    onPress={() => handleAddToCart(meal)}
+                  >
+                    <Text style={styles.addButtonText}>+</Text>
+                  </TouchableOpacity>
+                </View>
+              ))}
+            </Animated.View>
+          )}
+        </View>
+
+        {/* CART TOTAL */}
+        <View style={styles.cartContainer}>
+          <Text style={styles.cartText}>🛒 Total Items: {cart.length}</Text>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -477,7 +567,9 @@ function TabNavigator() {
         component={HomeScreen}
         options={{
           tabBarLabel: 'Home',
-          tabBarIcon: () => <Text style={styles.tabIcon}>🏠</Text>,
+          tabBarIcon: ({ focused, color, size }) => (
+            <Ionicons name={focused ? 'home' : 'home-outline'} size={size || 24} color={color} />
+          ),
         }}
       />
       <Tab.Screen
@@ -485,7 +577,9 @@ function TabNavigator() {
         component={AddMealScreen}
         options={{
           tabBarLabel: 'Manage Menu',
-          tabBarIcon: () => <Text style={styles.tabIcon}>🍽️</Text>,
+          tabBarIcon: ({ focused, color, size }) => (
+            <Ionicons name={focused ? 'restaurant' : 'restaurant-outline'} size={size || 24} color={color} />
+          ),
         }}
       />
       <Tab.Screen
@@ -493,7 +587,9 @@ function TabNavigator() {
         component={FilterScreen}
         options={{
           tabBarLabel: 'Filter',
-          tabBarIcon: () => <Text style={styles.tabIcon}>🔍</Text>,
+          tabBarIcon: ({ focused, color, size }) => (
+            <Ionicons name={focused ? 'filter' : 'filter-outline'} size={size || 24} color={color} />
+          ),
         }}
       />
     </Tab.Navigator>
@@ -525,7 +621,9 @@ const styles = StyleSheet.create({
   button: { backgroundColor: '#ff7f50', padding: 15, borderRadius: 10, alignItems: 'center', marginVertical: 10 },
   buttonText: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
   container: { backgroundColor: '#fff', padding: 10 },
-  header: { fontSize: 24, fontWeight: 'bold', marginVertical: 10, textAlign: 'center' },
+  headerContainer: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginVertical: 10 },
+  header: { fontSize: 24, fontWeight: 'bold', textAlign: 'center', marginLeft: 8 },
+  sectionHeaderContainer: { flexDirection: 'row', alignItems: 'center', marginBottom: 15 },
   searchInput: { borderWidth: 1, borderColor: '#ccc', borderRadius: 10, padding: 10, marginBottom: 15 },
   mealCard: { flexDirection: 'row', backgroundColor: '#f9f9f9', borderRadius: 15, padding: 10, marginBottom: 10, alignItems: 'center' },
   mealImage: { width: 80, height: 80, borderRadius: 15, marginRight: 10 },
@@ -600,7 +698,7 @@ const styles = StyleSheet.create({
   cartContainer: { backgroundColor: '#fff0e6', padding: 15, borderRadius: 10, marginTop: 20, alignItems: 'center' },
   cartText: { fontSize: 18, fontWeight: 'bold', color: '#ff7f50' },
   averagePricesContainer: { backgroundColor: '#f0f8ff', padding: 15, borderRadius: 10, marginBottom: 15 },
-  averagePricesTitle: { fontSize: 16, fontWeight: 'bold', marginBottom: 10, color: '#333', textAlign: 'center' },
+  averagePricesTitle: { fontSize: 16, fontWeight: 'bold', color: '#333' },
   averagePricesGrid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' },
   averagePriceCard: { 
     backgroundColor: '#fff', 
@@ -620,5 +718,4 @@ const styles = StyleSheet.create({
   filterInfoContainer: { backgroundColor: '#f0f8ff', padding: 15, borderRadius: 10, marginTop: 20 },
   filterInfoTitle: { fontSize: 16, fontWeight: 'bold', marginBottom: 8, color: '#333' },
   filterInfoText: { fontSize: 14, color: '#666', marginBottom: 4 },
-  tabIcon: { fontSize: 24 },
 });

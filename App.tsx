@@ -66,12 +66,12 @@ export const useMeals = () => {
 function MealsProvider({ children }: { children: React.ReactNode }) {
   // Menu items are stored in an array data structure
   const [meals, setMeals] = useState<Meal[]>([
-    { id: '1', name: 'Vegetable Salad', price: '10', image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c', description: 'Fresh mixed vegetables with dressing', type: 'starter' },
-    { id: '2', name: 'Lentil Soup', price: '8', image: 'https://images.pexels.com/photos/539451/pexels-photo-539451.jpeg', description: 'Warm and hearty lentil soup', type: 'starter' },
-    { id: '3', name: 'Beef Burger', price: '15', image: 'https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=80&q=80', description: 'Juicy beef patty with fresh vegetables', type: 'main' },
-    { id: '4', name: 'Margherita Pizza', price: '12', image: 'https://images.pexels.com/photos/10836977/pexels-photo-10836977.jpeg', description: 'Classic pizza with tomato and mozzarella', type: 'main' },
-    { id: '5', name: 'Cheesecake', price: '9', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjOSkPERVYz6sVua0XzIQeUM2vxxuaX-6nQA&s', description: 'Creamy and delicious cheesecake', type: 'dessert' },
-    { id: '6', name: 'Chocolate Brownie', price: '7', image: 'https://th.bing.com/th/id/OIP.LzD5bFDUFDGJ4jcMuUtcXAHaHa?w=202&h=202&c=7&r=0&o=7&cb=12&dpr=1.3&pid=1.7&rm=3', description: 'Rich chocolate brownie with fudge', type: 'dessert' },
+    { id: '1', name: 'Vegetable Salad', price: '10', image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c', description: 'A fresh and colorful mix of crisp vegetables such as lettuce, tomatoes, cucumbers, carrots, and bell peppers, tossed together to create a light and healthy dish. It’s often seasoned with a touch of olive oil, lemon juice, or your favorite dressing for extra flavor. Perfect as a side dish or a nutritious meal on its own.', type: 'starter' },
+    { id: '2', name: 'Lentil Soup', price: '8', image: 'https://images.pexels.com/photos/539451/pexels-photo-539451.jpeg', description: 'A warm and hearty soup made from tender lentils cooked with onions, carrots, garlic, and spices. Its rich in flavor, full of protein, and perfect for a comforting and nutritious meal. Often served with bread or a squeeze of lemon for a delicious finishing touch.', type: 'starter' },
+    { id: '3', name: 'Beef Burger', price: '15', image: 'https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=80&q=80', description: 'A juicy grilled beef patty served in a soft, toasted bun with fresh lettuce, tomato, onion, and cheese. Topped with your choice of sauces for a delicious and satisfying meal that’s perfect for any time of day.', type: 'main' },
+    { id: '4', name: 'Margherita Pizza', price: '12', image: 'https://images.pexels.com/photos/10836977/pexels-photo-10836977.jpeg', description: 'A classic Italian pizza topped with rich tomato sauce, creamy mozzarella cheese, and fresh basil leaves. Baked to perfection with a crispy crust and simple, authentic flavors that highlight the beauty of fresh ingredients.', type: 'main' },
+    { id: '5', name: 'Cheesecake', price: '9', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjOSkPERVYz6sVua0XzIQeUM2vxxuaX-6nQA&s', description: 'A rich and creamy dessert made with a smooth cheese filling on a buttery biscuit base. Often topped with fresh fruit, chocolate, or caramel for a perfectly sweet and indulgent treat.', type: 'dessert' },
+    { id: '6', name: 'Chocolate Brownie', price: '7', image: 'https://images.pexels.com/photos/27359377/pexels-photo-27359377.jpeg', description: 'A rich, fudgy dessert made with smooth melted chocolate and baked to perfection for a soft and chewy texture. Often served warm with a scoop of ice cream or a drizzle of chocolate sauce for an extra indulgent treat.', type: 'dessert' },
   ]);
 
   const [cart, setCart] = useState<Meal[]>([]);
@@ -156,7 +156,6 @@ function HomeScreen() {
 
   const handleAddToCart = (meal: Meal) => {
     setCart([...cart, meal]);
-    Alert.alert('Added', `${meal.name} added to cart!`);
   };
 
   const filteredMeals = meals.filter(
@@ -260,28 +259,31 @@ function HomeScreen() {
 
         {/* MEALS LIST */}
         <Animated.View style={{ opacity: fadeAnim }}>
-          {filteredMeals.map((meal) => (
-            <View key={meal.id} style={styles.mealCard}>
-              <Image source={{ uri: meal.image }} style={styles.mealImage} />
-              <View style={{ flex: 1 }}>
-                <Text style={styles.mealName}>{meal.name}</Text>
-                <Text style={styles.mealDescription}>{meal.description}</Text>
-                <Text style={styles.mealPrice}>${meal.price}</Text>
+          {filteredMeals.map((meal) => {
+            const isInCart = cart.some(item => item.id === meal.id);
+            return (
+              <View key={meal.id} style={styles.mealCard}>
+                <Image source={{ uri: meal.image }} style={styles.mealImage} />
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.mealName}>{meal.name}</Text>
+                  <Text style={styles.mealDescription}>{meal.description}</Text>
+                  <Text style={styles.mealPrice}>${meal.price}</Text>
+                </View>
+                <TouchableOpacity
+                  style={[styles.addButtonSmall, isInCart && styles.addButtonChecked]}
+                  onPress={() => handleAddToCart(meal)}
+                  disabled={isInCart}
+                >
+                  {isInCart ? (
+                    <Ionicons name="checkmark" size={24} color="#fff" />
+                  ) : (
+                    <Text style={styles.addButtonText}>+</Text>
+                  )}
+                </TouchableOpacity>
               </View>
-              <TouchableOpacity
-                style={styles.addButtonSmall}
-                onPress={() => handleAddToCart(meal)}
-              >
-                <Text style={styles.addButtonText}>+</Text>
-              </TouchableOpacity>
-            </View>
-          ))}
+            );
+          })}
         </Animated.View>
-
-        {/* CART TOTAL */}
-        <View style={styles.cartContainer}>
-          <Text style={styles.cartText}>🛒 Total Items: {cart.length}</Text>
-        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -449,7 +451,6 @@ function FilterScreen() {
 
   const handleAddToCart = (meal: Meal) => {
     setCart([...cart, meal]);
-    Alert.alert('Added', `${meal.name} added to cart!`);
   };
 
   const filteredMeals = meals.filter(
@@ -517,29 +518,32 @@ function FilterScreen() {
             </View>
           ) : (
             <Animated.View style={{ opacity: fadeAnim }}>
-              {filteredMeals.map((meal) => (
-                <View key={meal.id} style={styles.mealCard}>
-                  <Image source={{ uri: meal.image }} style={styles.mealImage} />
-                  <View style={{ flex: 1 }}>
-                    <Text style={styles.mealName}>{meal.name}</Text>
-                    <Text style={styles.mealDescription}>{meal.description}</Text>
-                    <Text style={styles.mealPrice}>${meal.price}</Text>
+              {filteredMeals.map((meal) => {
+                const isInCart = cart.some(item => item.id === meal.id);
+                return (
+                  <View key={meal.id} style={styles.mealCard}>
+                    <Image source={{ uri: meal.image }} style={styles.mealImage} />
+                    <View style={{ flex: 1 }}>
+                      <Text style={styles.mealName}>{meal.name}</Text>
+                      <Text style={styles.mealDescription}>{meal.description}</Text>
+                      <Text style={styles.mealPrice}>${meal.price}</Text>
+                    </View>
+                    <TouchableOpacity
+                      style={[styles.addButtonSmall, isInCart && styles.addButtonChecked]}
+                      onPress={() => handleAddToCart(meal)}
+                      disabled={isInCart}
+                    >
+                      {isInCart ? (
+                        <Ionicons name="checkmark" size={24} color="#fff" />
+                      ) : (
+                        <Text style={styles.addButtonText}>+</Text>
+                      )}
+                    </TouchableOpacity>
                   </View>
-                  <TouchableOpacity
-                    style={styles.addButtonSmall}
-                    onPress={() => handleAddToCart(meal)}
-                  >
-                    <Text style={styles.addButtonText}>+</Text>
-                  </TouchableOpacity>
-                </View>
-              ))}
+                );
+              })}
             </Animated.View>
           )}
-        </View>
-
-        {/* CART TOTAL */}
-        <View style={styles.cartContainer}>
-          <Text style={styles.cartText}>🛒 Total Items: {cart.length}</Text>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -689,6 +693,7 @@ const styles = StyleSheet.create({
   activeCategoryButtonText: { color: '#fff' },
   addButtonMain: { backgroundColor: '#ff7f50', padding: 12, borderRadius: 10, alignItems: 'center' },
   addButtonSmall: { backgroundColor: '#ff7f50', width: 40, height: 40, borderRadius: 20, justifyContent: 'center', alignItems: 'center' },
+  addButtonChecked: { backgroundColor: '#4caf50' },
   addButtonText: { color: '#fff', fontWeight: 'bold', fontSize: 18 },
   filterContainer: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-around', marginBottom: 10 },
   filterButton: { borderWidth: 1, borderColor: '#ff7f50', borderRadius: 20, paddingVertical: 6, paddingHorizontal: 15, marginBottom: 5 },

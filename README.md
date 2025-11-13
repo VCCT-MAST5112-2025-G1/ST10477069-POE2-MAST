@@ -1,60 +1,104 @@
-# Food Menu App — Project Report
+# 🍕 Foodie Fusion
 
-## Project Summary
-This project is a modern mobile Food Menu App built with React Native and Expo as part of my (ST10477069) coursework. The app allows users to log in, browse a menu of meals with images and categories, add their own custom meals, filter and search the menu, and manage a dynamic cart—all inside a polished, animated mobile UI. The project demonstrates my skills in building a user-friendly, interactive, and scalable app tailored for practical food-service or cafe scenarios.
+A sleek and interactive mobile restaurant menu app crafted for the digital age—bringing mouthwatering meals and a seamless user experience straight to your phone, whether you’re a casual diner or a busy restaurant owner.
 
-## Main Features
-- **Login system** (simulated, no backend)
-- **Home/Menu browsing:** View meals with category, description, and image. Smooth animation on load.
-- **Add Meal:** Add new custom meals (with name, description, price, image, category).
-- **Responsive Filtering/Search:** Filter menu by category and search by name, combined for precise, real-time menu results.
-- **Cart Functionality:**
-  - Tap "+" to add any meal to your cart.
-  - Button turns to a green checkmark and disables for added items for instant feedback and to prevent duplicates.
-- **Tab Bar Navigation:**
-  - Uses real vector icons (Ionicons) for a native app feel.
-  - Distinct tabs for Home, Manage Menu, and Filter.
-- **Modern, responsive UI:**
-  - Scrollable and touch-friendly layouts
-  - Clean, consistent color theme and typography
-  - Cards with rounded corners, uniform spacing, and readable fonts
-  - Icon-based headers for key sections
-- **Smooth animations:**
-  - Animated appearance of meal cards for professional UX
-  - Button state transitions for clarity
+---
 
-## Improvements / Custom Features Added
-Below are the key enhancements and deliberate choices I made:
-- Replaced static header emojis with modern Ionicons in tab bar and page headers for a real “app” look
-- **Converted tabBarIcon:** uses `Ionicons` and changes icons when tab is focused (filled/outline variant)
-- Meal cards and management views show high-quality food images for each item, not just icons
-- **+ Button behavior:** When you add a meal, the button becomes a green checkmark and is disabled—instant feedback, no alert popups
-- **Cart total display removed** — streamlined the UI as requested
-- Expanded seed data descriptions for a more appetizing and realistic demo
-- Centralized all hard-coded UI labels and icons for easier maintenance
-- All app data handled with clean React state/hooks (no Redux for simplicity)
-- Typed all data using TypeScript for safety and maintainability
+📸 *[Showcase images/screens here: login, menu cards, add meal, filter, cart]*
 
-## Technologies Used
-- **React Native** and **Expo** for the app
-- **TypeScript** for safe and robust code
-- **@expo/vector-icons** (Ionicons) for modern icons
-- **React Navigation** for seamless tab/page routing
+---
 
-## How to Run
-1. Ensure [Node.js](https://nodejs.org/) and [Expo CLI](https://docs.expo.dev/get-started/installation/) are installed
-2. Clone this repo and `cd` into the directory.
-3. Run `npm install` (or `yarn`)
-4. Start the app: `npm start` (or `expo start`)
-5. Use an emulator/device with Expo Go to experience the UI
+## 📖 About Foodie Fusion
 
-## Developer, Student Number & Links
-**Osamah Khaled Al-Batati**  
-Student #: ST10477069  
-[Assignment Repository](https://github.com/VCCT-MAST5112-2025-G1/ST10477069-POE2-MAST)  
-[Demo Walkthrough Video](https://youtu.be/GCBeh8r3bSE?si=IogcxfFQ3hjYCWdJ)
+Inspired by the vibrant culture of modern dining, **Foodie Fusion** puts the entire restaurant menu—starters, mains, desserts, and more—right at your fingertips. Built to bridge the gap between traditional menus and digital convenience, this app emphasizes clarity, speed, and customizability from the first tap.
 
-## Additional Notes
-- The UI is designed with accessibility, speed, and clarity in mind.
-- The app structure is scalable—new menu categories or features can be added with minimal refactor.
-- My approach focused both on user experience and code clarity so reviewers and users can quickly understand and extend the codebase.
+**Our Goal:**
+To empower kitchens and customers alike with a joyful, beautiful, and interactive menu experience that’s as fresh as the meals on display. Whether you’re exploring new tastes or managing what’s on offer, Foodie Fusion adapts to your needs with style.
+
+---
+
+## ✨ App Highlights
+
+### ☑️ Core Pages
+- **Welcome/Login:** Fast and frustration-free entry with basic credentials
+- **All Meals:** Visual catalog of dishes, each with photo, description, price, and type
+- **Add New Meal:** Instantly expand your menu (or demo!) with custom items/images
+- **Filter/Find:** Real-time type filtering and search for instant results
+- **Admin Tools:** Remove or edit menu items directly from the app
+
+### 🎨 User Experience & Design
+- Ionicon-powered tab bar for a truly native-app feel
+- Animated menu card transitions
+- Clean layouts—mobile optimized with modern colors and typography
+- Smart feedback: add-to-cart checkmark disables after selection for clarity
+- Real food photography (not just icons!) throughout
+
+### ⚡ Interactive Features
+- 🍽️ Tap-to-order: No accidental double orders, clear feedback
+- 🔍 Seamless search: Combined filter + search input = always relevant suggestions
+- 📲 Instantly add, edit, or remove menu items
+- 💬 Section headers with meaningful icons for easy navigation
+
+---
+
+## 🛠️ Tech Stack
+- **React Native & Expo** for cross-platform mobile power
+- **TypeScript** for safety and easier future changes
+- **@expo/vector-icons** for a vibrant, modern look
+- **React Navigation** for silky-smooth tabs & page transitions
+
+---
+
+## 📂 App Structure
+```
+FoodieFusion/
+├── App.tsx         # All app logic & UI components
+├── package.json    # Dependencies & scripts
+├── tsconfig.json   # TypeScript config
+├── README.md       # App guide (this file)
+└── ...             # Assets/images for meals
+```
+
+---
+
+## 🚀 Quickstart
+
+### Requirements
+- Node.js, Expo CLI
+
+### Setup
+```bash
+npm install
+yarn # optional
+npm start  # launches Expo
+```
+Follow the Expo instructions to run on device/emulator or web.
+
+---
+
+## 🎮 How to Use
+- **Login:** Enter any details to access the menu
+- **Browse:** View, filter, or search meals—all results are live
+- **Manage:** Add custom meals, edit or remove items instantly
+- **Order:** Tap the plus to add to cart—see it become a check!
+- **Explore:** Enjoy the tab-bar layout and real restaurant atmosphere
+
+---
+
+## 🙌 Credits & Further Info
+Developed by **Osamah Khaled Al-Batati**  
+Student #: ST10477069
+- [Demo Video Walkthrough](https://youtu.be/GCBeh8r3bSE?si=IogcxfFQ3hjYCWdJ)
+- [Full Source Repo](https://github.com/VCCT-MAST5112-2025-G1/ST10477069-POE2-MAST)
+
+---
+
+## 📝 Additional Details
+- Every line of code written with clarity and extensibility in mind
+- Built for mobile-first users—responsive, smooth, and appealing
+- Easily adaptable for real-world restaurant needs or further coursework
+- Feedback-driven improvements implemented throughout development
+
+---
+
+**Foodie Fusion: Your Menu, Your Way.**

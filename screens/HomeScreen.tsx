@@ -1,5 +1,5 @@
-import React, { useRef, useEffect } from 'react';
-import { View, Text, TextInput, ScrollView, Animated } from 'react-native';
+import React, { useRef, useEffect, useState } from 'react';
+import { View, Text, TextInput, ScrollView, Animated, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useMeals } from '../utils/MealsContext';
@@ -11,6 +11,7 @@ import MealCard from '../components/MealCard';
 export default function HomeScreen() {
   const { meals, cart, setCart, filterType, search, setSearch } = useMeals();
   const fadeAnim = useRef(new Animated.Value(0)).current;
+  const [showProducts, setShowProducts] = useState(false);
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
@@ -74,7 +75,7 @@ export default function HomeScreen() {
   const averagePrices = calculateAveragePrices();
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={styles.safeArea} edges={['top', 'bottom', 'left', 'right']}>
       <ScrollView style={styles.container}>
         <View style={styles.headerContainer}>
           <Ionicons name="restaurant" size={28} color="#ff7f50" />
@@ -109,19 +110,36 @@ export default function HomeScreen() {
           style={styles.searchInput}
         />
 
-        <Animated.View style={{ opacity: fadeAnim }}>
-          {filteredMeals.map((meal) => {
-            const isInCart = cart.some(item => item.id === meal.id);
-            return (
-              <MealCard
-                key={meal.id}
-                meal={meal}
-                isInCart={isInCart}
-                onAddToCart={handleAddToCart}
-              />
-            );
-          })}
-        </Animated.View>
+        {!showProducts && (
+          <TouchableOpacity
+            style={styles.showProductsButton}
+            onPress={() => setShowProducts(true)}
+          >
+            <Ionicons 
+              name="eye" 
+              size={20} 
+              color="#fff" 
+              style={{ marginRight: 8 }}
+            />
+            <Text style={styles.buttonText}>Show Products</Text>
+          </TouchableOpacity>
+        )}
+
+        {showProducts && (
+          <Animated.View style={{ opacity: fadeAnim }}>
+            {filteredMeals.map((meal) => {
+              const isInCart = cart.some(item => item.id === meal.id);
+              return (
+                <MealCard
+                  key={meal.id}
+                  meal={meal}
+                  isInCart={isInCart}
+                  onAddToCart={handleAddToCart}
+                />
+              );
+            })}
+          </Animated.View>
+        )}
       </ScrollView>
     </SafeAreaView>
   );

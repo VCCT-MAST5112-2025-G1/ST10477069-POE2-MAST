@@ -206,6 +206,15 @@ export const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
   },
+  showProductsButton: {
+    backgroundColor: '#ff7f50',
+    padding: 12,
+    borderRadius: 10,
+    alignItems: 'center',
+    marginBottom: 15,
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
   menuItemsContainer: {
     marginTop: 20,
     marginBottom: 20,

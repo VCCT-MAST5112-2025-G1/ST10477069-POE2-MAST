@@ -43,7 +43,7 @@ export default function AddMealScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={styles.safeArea} edges={['top', 'bottom', 'left', 'right']}>
       <ScrollView style={styles.container}>
         <View style={styles.headerContainer}>
           <Ionicons name="settings" size={28} color="#ff7f50" />

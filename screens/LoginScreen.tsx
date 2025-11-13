@@ -13,8 +13,9 @@ export default function LoginScreen({ navigation }: any) {
   };
 
   return (
-    <SafeAreaView style={styles.loginContainer}>
-      <Text style={styles.title}>🍴 Welcome to Food Menu App</Text>
+    <SafeAreaView style={styles.safeArea} edges={['top', 'bottom', 'left', 'right']}>
+      <View style={styles.loginContainer}>
+        <Text style={styles.title}>🍴 Welcome to Food Menu App</Text>
       <TextInput placeholder="Email" value={email} onChangeText={setEmail} style={styles.input} />
       <TextInput
         placeholder="Password"
@@ -26,6 +27,7 @@ export default function LoginScreen({ navigation }: any) {
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 }

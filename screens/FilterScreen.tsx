@@ -30,7 +30,7 @@ export default function FilterScreen() {
   );
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={styles.safeArea} edges={['top', 'bottom', 'left', 'right']}>
       <ScrollView style={styles.container}>
         <Text style={styles.header}>🔍 Filter Meals</Text>
 

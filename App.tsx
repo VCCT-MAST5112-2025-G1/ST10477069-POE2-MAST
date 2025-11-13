@@ -15,6 +15,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
+import * as ImagePicker from 'expo-image-picker';
 
 type RootStackParamList = {
   Login: undefined;
@@ -125,7 +126,7 @@ function LoginScreen({ navigation }: any) {
 
   return (
     <SafeAreaView style={styles.loginContainer}>
-      <Text style={styles.title}>🍴 Welcome to Food Menu App</Text>
+      <Text style={styles.title}> Welcome to Food Menu App</Text>
       <TextInput placeholder="Email" value={email} onChangeText={setEmail} style={styles.input} />
       <TextInput
         placeholder="Password"
@@ -365,12 +366,27 @@ function AddMealScreen() {
             onChangeText={text => setNewMeal({ ...newMeal, price: text })}
             style={styles.input}
           />
-          <TextInput
-            placeholder="Image URL"
-            value={newMeal.image}
-            onChangeText={text => setNewMeal({ ...newMeal, image: text })}
-            style={styles.input}
-          />
+          <Text style={styles.categoryLabel}>Meal Photo:</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
+            <TouchableOpacity
+              style={styles.addButtonMain}
+              onPress={async () => {
+                let result = await ImagePicker.launchImageLibraryAsync({
+                  mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                  allowsEditing: true,
+                  quality: 1,
+                });
+                if (!result.canceled) {
+                  setNewMeal({ ...newMeal, image: result.assets[0].uri });
+                }
+              }}
+            >
+              <Text style={styles.buttonText}>Add Photo</Text>
+            </TouchableOpacity>
+            {newMeal.image ? (
+              <Image source={{ uri: newMeal.image }} style={{ width: 50, height: 50, borderRadius: 8, marginLeft: 15 }} />
+            ) : null}
+          </View>
           {/* CATEGORY SELECTION */}
           <Text style={styles.categoryLabel}>Category:</Text>
           <View style={styles.categoryContainer}>

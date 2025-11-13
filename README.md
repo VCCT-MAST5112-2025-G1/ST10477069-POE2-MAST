@@ -1,4 +1,4 @@
-# Foodie Fusion
+# FoodMenuApp
 
 A sleek and interactive mobile restaurant menu app crafted for the digital age—bringing mouthwatering meals and a seamless user experience straight to your phone, whether you’re a casual diner or a busy restaurant owner.
 
@@ -8,7 +8,7 @@ A sleek and interactive mobile restaurant menu app crafted for the digital age�
 
 ---
 
-## About Foodie Fusion
+## About Food Menu App
 
 Inspired by the vibrant culture of modern dining, **Foodie Fusion** puts the entire restaurant menu—starters, mains, desserts, and more—right at your fingertips. Built to bridge the gap between traditional menus and digital convenience, this app emphasizes clarity, speed, and customizability from the first tap.
 

@@ -1,10 +1,10 @@
-# 🍽️ Food Menu App
+#  Food Menu App
 
 A modern, elegant mobile application for browsing, managing, and ordering restaurant meals—bringing delicious food experiences directly to your mobile device with a clean, intuitive interface.
 
 ---
 
-## 📖 About
+##  About
 
 **Food Menu App** is a comprehensive React Native application designed to streamline the restaurant menu experience. Built with modern mobile development practices, this app allows users to browse meals, filter by category, search for specific dishes, and manage menu items—all within a beautifully designed, responsive interface.
 
@@ -13,9 +13,9 @@ To create a seamless, user-friendly mobile experience that makes restaurant menu
 
 ---
 
-## ✨ Features
+##  Features
 
-### 🏠 Core Screens
+###  Core Screens
 - **Login Screen:** Simple authentication with email and password validation
 - **Home Screen:** 
   - Browse all meals with images, descriptions, and prices
@@ -33,7 +33,7 @@ To create a seamless, user-friendly mobile experience that makes restaurant menu
   - Active filter indicators
   - Real-time results count
 
-### 🎨 User Experience & Design
+###  User Experience & Design
 - **Modern Tab Navigation:** Ionicons-based tab bar with active/inactive states
 - **Smooth Animations:** Fade-in effects for meal cards
 - **Visual Feedback:** 
@@ -42,7 +42,7 @@ To create a seamless, user-friendly mobile experience that makes restaurant menu
 - **Responsive Layout:** Mobile-optimized with clean spacing and typography
 - **Image Support:** Real food images from URLs or device gallery
 
-### ⚡ Interactive Features
+###  Interactive Features
 - **Smart Cart System:** 
   - One-click add to cart
   - Visual confirmation with checkmark
@@ -59,7 +59,7 @@ To create a seamless, user-friendly mobile experience that makes restaurant menu
 
 ---
 
-## 🛠️ Technologies Used
+##  Technologies Used
 
 ### Frontend
 - **React Native** - Cross-platform mobile framework
@@ -76,7 +76,7 @@ To create a seamless, user-friendly mobile experience that makes restaurant menu
 
 ---
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 ST10477069-POE2-MAST/
@@ -107,7 +107,7 @@ ST10477069-POE2-MAST/
 
 ---
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### Prerequisites
 - **Node.js** (v16 or higher recommended)
@@ -143,7 +143,7 @@ ST10477069-POE2-MAST/
 
 ---
 
-## 📱 Usage Guide
+##  Usage Guide
 
 ### Navigation
 - **Login:** Enter any email and password to access the app
@@ -173,7 +173,7 @@ ST10477069-POE2-MAST/
 
 ---
 
-## 🔧 Configuration
+##  Configuration
 
 ### Image Picker Permissions
 The app requires camera/gallery permissions for image selection. These are handled automatically by Expo on first use.
@@ -187,7 +187,7 @@ All app state is managed through React Context (`MealsContext`), providing:
 
 ---
 
-## 🎯 Key Features Breakdown
+##  Key Features Breakdown
 
 ### 1. Component Architecture
 ✅ **Reusable Components:**
@@ -222,7 +222,7 @@ All app state is managed through React Context (`MealsContext`), providing:
 
 ---
 
-## 🌐 Browser/Platform Compatibility
+##  Browser/Platform Compatibility
 
 ✅ **iOS** (via Expo Go or standalone build)  
 ✅ **Android** (via Expo Go or standalone build)  
@@ -230,7 +230,7 @@ All app state is managed through React Context (`MealsContext`), providing:
 
 ---
 
-## 📝 Development Notes
+##  Development Notes
 
 ### Code Organization
 - **Separation of Concerns:** Screens, components, utilities, and styles are organized in separate directories
@@ -248,14 +248,14 @@ All app state is managed through React Context (`MealsContext`), providing:
 
 ---
 
-## 🔗 Links
+##  Links
 
 - **GitHub Repository:** [ST10477069-POE2-MAST](https://github.com/VCCT-MAST5112-2025-G1/ST10477069-POE2-MAST)
 - **Demo Video:** [YouTube Walkthrough](https://youtu.be/GCBeh8r3bSE?si=IogcxfFQ3hjYCWdJ)
 
 ---
 
-## 👨‍💻 Developer Information
+##  Developer Information
 
 **Developed By:** Osamah Khaled Al-Batati  
 **Student Number:** ST10477069  
@@ -263,7 +263,7 @@ All app state is managed through React Context (`MealsContext`), providing:
 
 ---
 
-## 🚧 Future Enhancements
+##  Future Enhancements
 
 - [ ] Shopping cart checkout functionality
 - [ ] User authentication with backend
@@ -278,6 +278,7 @@ All app state is managed through React Context (`MealsContext`), providing:
 
 ---
 
+<<<<<<< HEAD
 ## 📚 References
 
 ### Core Technologies
@@ -325,12 +326,15 @@ All app state is managed through React Context (`MealsContext`), providing:
 ---
 
 ## 📄 License
+=======
+##  License
+>>>>>>> 380ad9fc850a15ad86dcc9790536d3d2813e8b05
 
 This project is part of an academic assignment for MAST5112.
 
 ---
 
-## 🙏 Acknowledgments
+##  Acknowledgments
 
 Built with React Native, Expo, and modern mobile development best practices. Special thanks to the React Native and Expo communities for excellent documentation and tools.
 

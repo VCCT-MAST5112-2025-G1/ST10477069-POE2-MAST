@@ -1,153 +1,60 @@
-🎙️ Detailed Video Script — Food Menu App (React Native)
-1️⃣ Introduction
-
-Hello everyone! Today, I’ll walk you through my React Native Food Menu App.
-
-This mobile app allows users to:
-
-Log in with email and password.
-![WhatsApp Image 2025-10-22 at 22 18 09_41530010](https://github.com/user-attachments/assets/531fff6b-ce49-4cf3-920a-e4efc293efaa)
-
-
-Browse a menu divided into three main categories: Starters, Fast Food, and Desserts.
-![WhatsApp Image 2025-10-22 at 22 18 09_589c7309](https://github.com/user-attachments/assets/ce2f4915-c14a-4e91-96ad-8c410a924f8e)
-![WhatsApp Image 2025-10-22 at 22 18 09_dfed6e63](https://github.com/user-attachments/assets/2d52f58e-de86-433e-ae00-8aa750fcd6ca)
-
-
-Search and filter meals.
-![WhatsApp Image 2025-10-22 at 22 18 09_93733a08](https://github.com/user-attachments/assets/67fd5211-7cbb-4d7a-bc51-dc0251e55aa6)
-
-
-Add meals to a cart.
-![WhatsApp Image 2025-10-22 at 22 18 09_ee1b9f0d](https://github.com/user-attachments/assets/4b9b9eae-39cd-4a1d-8788-a86494fd17cd)
-
-
-See the total price update dynamically.
-![WhatsApp Image 2025-10-22 at 22 18 09_611413a2](https://github.com/user-attachments/assets/5d290a6e-5087-419b-b7b0-d12d5dff01a5)
-
-
-Add new meals manually, including their name, description, price, image, and category.
-![WhatsApp Image 2025-10-22 at 22 18 09_1c5a8e67](https://github.com/user-attachments/assets/261cf148-da77-4529-b5c2-250db9a00417)
-
-
-This walkthrough will explain the logic, interactions, design choices, and smart tricks in the app.
-
-2️⃣ Login Screen
-
-The app starts with a Login Screen where users enter their email and password.
-
-If both fields are filled, the app navigates to the main screen.
-
-Navigation is designed so the user cannot go back to the login page once logged in.
-
-If any field is empty, an alert notifies the user.
-
-This provides a simple but effective authentication simulation.
-
-3️⃣ Home Screen & State Management
-
-The main screen stores the menu, cart, and total price using dynamic state management.
-
-There are separate states for:
-
-All meals
-
-Cart items
-
-Total price
-
-Search query
-
-Current category filter
-
-Inputs for adding new meals
-
-Using dynamic state allows the app to update in real time whenever the user interacts.
-
-4️⃣ Meal Categories and Filtering
-
-The app has three categories: Starters, Fast Food, and Desserts.
-
-Users can filter meals by category or search for a meal by name.
-
-Filtering and search are combined, so the results always match the category and search term.
-
-This keeps the interface smart and responsive, showing only relevant meals.
-
-5️⃣ Adding New Meals
-
-Users can add new meals by filling in: name, description, price, image, and category.
-
-Once added, the meal immediately appears in the menu without refreshing the page.
-
-The app supports adding unlimited meals easily, making it flexible for future updates.
-
-6️⃣ Adding Meals to the Cart & Total Price
-
-Each meal card has a “+” button to add it to the cart.
-
-When a meal is added, it appears in the cart, and the total price updates automatically.
-
-The total price calculation is dynamic — no refresh or extra click is needed.
-
-This gives a smooth and real-time interactive experience for the user.
-
-7️⃣ Animations
-
-When the menu loads, all meals fade in smoothly, creating a professional and polished look.
-
-This animation enhances the user experience without affecting performance.
-
-8️⃣ User Interface & Design
-
-The app uses a scrollable layout to accommodate all menu items.
-
-Each meal is displayed as a card containing:
-
-A clear image
-
-Name and description
-
-Type (category)
-
-Price
-
-Add-to-cart button
-
-Colors, spacing, and font sizes are chosen for readability and visual appeal.
-
-Buttons and cards have rounded edges and a consistent theme to improve aesthetics.
-
-Design is separated from logic, making it easy to maintain and customize.
-
-9️⃣ Smart Tricks & Highlights
-
-Reactive State: Changes appear immediately without refresh.
-
-Dynamic Total Price: Updates automatically with cart changes.
-
-Search + Filter: Combined to show only relevant meals.
-
-Scalable Structure: New meals or categories can be added easily.
-
-Smooth Animation: Fade-in effect for professional UI feel.
-
-Separation of Logic and Design: Styles are cleanly organized.
-
-🔟 Conclusion
-
-This Food Menu App demonstrates a solid understanding of React Native fundamentals: state management, dynamic UI updates, interactivity, and user-friendly design.
-
-Users can browse, filter, search, add meals, and see the total price update in real time.
-
-The app is scalable, visually appealing, and combines practical functionality with smooth animations, making it a complete small-scale mobile project.
-
-Thank you for watching!
-
-Youtub Link:https://youtu.be/GCBeh8r3bSE?si=IogcxfFQ3hjYCWdJ
-
-OSAMAH KHALED AL-BATATI
-
-ST10477069
-
-https://github.com/VCCT-MAST5112-2025-G1/ST10477069-POE2-MAST
+# Food Menu App — Project Report
+
+## Project Summary
+This project is a modern mobile Food Menu App built with React Native and Expo as part of my (ST10477069) coursework. The app allows users to log in, browse a menu of meals with images and categories, add their own custom meals, filter and search the menu, and manage a dynamic cart—all inside a polished, animated mobile UI. The project demonstrates my skills in building a user-friendly, interactive, and scalable app tailored for practical food-service or cafe scenarios.
+
+## Main Features
+- **Login system** (simulated, no backend)
+- **Home/Menu browsing:** View meals with category, description, and image. Smooth animation on load.
+- **Add Meal:** Add new custom meals (with name, description, price, image, category).
+- **Responsive Filtering/Search:** Filter menu by category and search by name, combined for precise, real-time menu results.
+- **Cart Functionality:**
+  - Tap "+" to add any meal to your cart.
+  - Button turns to a green checkmark and disables for added items for instant feedback and to prevent duplicates.
+- **Tab Bar Navigation:**
+  - Uses real vector icons (Ionicons) for a native app feel.
+  - Distinct tabs for Home, Manage Menu, and Filter.
+- **Modern, responsive UI:**
+  - Scrollable and touch-friendly layouts
+  - Clean, consistent color theme and typography
+  - Cards with rounded corners, uniform spacing, and readable fonts
+  - Icon-based headers for key sections
+- **Smooth animations:**
+  - Animated appearance of meal cards for professional UX
+  - Button state transitions for clarity
+
+## Improvements / Custom Features Added
+Below are the key enhancements and deliberate choices I made:
+- Replaced static header emojis with modern Ionicons in tab bar and page headers for a real “app” look
+- **Converted tabBarIcon:** uses `Ionicons` and changes icons when tab is focused (filled/outline variant)
+- Meal cards and management views show high-quality food images for each item, not just icons
+- **+ Button behavior:** When you add a meal, the button becomes a green checkmark and is disabled—instant feedback, no alert popups
+- **Cart total display removed** — streamlined the UI as requested
+- Expanded seed data descriptions for a more appetizing and realistic demo
+- Centralized all hard-coded UI labels and icons for easier maintenance
+- All app data handled with clean React state/hooks (no Redux for simplicity)
+- Typed all data using TypeScript for safety and maintainability
+
+## Technologies Used
+- **React Native** and **Expo** for the app
+- **TypeScript** for safe and robust code
+- **@expo/vector-icons** (Ionicons) for modern icons
+- **React Navigation** for seamless tab/page routing
+
+## How to Run
+1. Ensure [Node.js](https://nodejs.org/) and [Expo CLI](https://docs.expo.dev/get-started/installation/) are installed
+2. Clone this repo and `cd` into the directory.
+3. Run `npm install` (or `yarn`)
+4. Start the app: `npm start` (or `expo start`)
+5. Use an emulator/device with Expo Go to experience the UI
+
+## Developer, Student Number & Links
+**Osamah Khaled Al-Batati**  
+Student #: ST10477069  
+[Assignment Repository](https://github.com/VCCT-MAST5112-2025-G1/ST10477069-POE2-MAST)  
+[Demo Walkthrough Video](https://youtu.be/GCBeh8r3bSE?si=IogcxfFQ3hjYCWdJ)
+
+## Additional Notes
+- The UI is designed with accessibility, speed, and clarity in mind.
+- The app structure is scalable—new menu categories or features can be added with minimal refactor.
+- My approach focused both on user experience and code clarity so reviewers and users can quickly understand and extend the codebase.

@@ -248,13 +248,6 @@ All app state is managed through React Context (`MealsContext`), providing:
 
 ---
 
-##  Links
-
-- **GitHub Repository:** [ST10477069-POE2-MAST](https://github.com/VCCT-MAST5112-2025-G1/ST10477069-POE2-MAST)
-- **Demo Video:** [YouTube Walkthrough](https://youtu.be/GCBeh8r3bSE?si=IogcxfFQ3hjYCWdJ)
-
----
-
 ##  Developer Information
 
 **Developed By:** Osamah Khaled Al-Batati  
@@ -343,6 +336,14 @@ Built with React Native, Expo, and modern mobile development best practices. Spe
 **Built with ❤️ for food lovers everywhere**
 
 © 2025 Food Menu App — Crafted with passion and attention to detail.
+
+---
+
+
+##  Links
+
+- **GitHub Repository:** [ST10477069-POE2-MAST]()
+- **Demo Video:** [YouTube Walkthrough](https://www.youtube.com/watch?v=LcuBP8kKpXU)
 
 ---
 

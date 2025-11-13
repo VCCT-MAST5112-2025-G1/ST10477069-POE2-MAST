@@ -342,7 +342,7 @@ Built with React Native, Expo, and modern mobile development best practices. Spe
 
 ##  Links
 
-- **GitHub Repository:** [)
+- **GitHub Repository:** [https://github.com/VCCT-MAST5112-2025-G1/ST10477069-POE-MAST)
 - **Demo Video:** [YouTube Walkthrough](https://www.youtube.com/watch?v=LcuBP8kKpXU)
 
 ---

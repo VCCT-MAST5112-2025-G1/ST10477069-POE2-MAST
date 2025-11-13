@@ -278,6 +278,52 @@ All app state is managed through React Context (`MealsContext`), providing:
 
 ---
 
+## 📚 References
+
+### Core Technologies
+1. Meta. (2024). *React Native - A framework for building native apps using React*. React Native. https://reactnative.dev/
+
+2. Expo. (2024). *Expo Documentation*. Expo. https://docs.expo.dev/
+
+3. Microsoft. (2024). *TypeScript - JavaScript with syntax for types*. TypeScript. https://www.typescriptlang.org/
+
+### Libraries and Dependencies
+4. React Navigation. (2024). *React Navigation - Routing and navigation for React Native apps*. React Navigation. https://reactnavigation.org/
+
+5. Expo. (2024). *@expo/vector-icons - Icon library for Expo and React Native*. Expo. https://docs.expo.dev/guides/icons/
+
+6. Expo. (2024). *expo-image-picker - Provides access to the system's UI for selecting images*. Expo. https://docs.expo.dev/versions/latest/sdk/image-picker/
+
+7. React Native Community. (2024). *react-native-safe-area-context - A flexible way to handle safe areas*. GitHub. https://github.com/th3rdwave/react-native-safe-area-context
+
+8. React Native Community. (2024). *react-native-screens - Native navigation primitives*. GitHub. https://github.com/software-mansion/react-native-screens
+
+### Development Tools
+9. Expo. (2024). *Expo CLI - Command line tools for Expo*. Expo. https://docs.expo.dev/more/expo-cli/
+
+10. Node.js. (2024). *Node.js - JavaScript runtime built on Chrome's V8 JavaScript engine*. Node.js. https://nodejs.org/
+
+### Documentation and Learning Resources
+11. React Native Documentation. (2024). *React Native - Learn once, write anywhere*. React Native. https://reactnative.dev/docs/getting-started
+
+12. Expo Documentation. (2024). *Expo - The fastest way to build an app*. Expo. https://docs.expo.dev/
+
+13. TypeScript Handbook. (2024). *TypeScript - Handbook*. TypeScript. https://www.typescriptlang.org/docs/handbook/intro.html
+
+14. React Navigation Documentation. (2024). *Getting Started - React Navigation*. React Navigation. https://reactnavigation.org/docs/getting-started
+
+### Design and UI Resources
+15. Ionicons. (2024). *Ionicons - The premium icon pack*. Ionicons. https://ionic.io/ionicons
+
+16. React Native. (2024). *StyleSheet - A StyleSheet is an abstraction similar to CSS StyleSheets*. React Native. https://reactnative.dev/docs/stylesheet
+
+### Best Practices and Patterns
+17. React. (2024). *Context API - React Context provides a way to pass data through the component tree*. React. https://react.dev/reference/react/createContext
+
+18. React Native. (2024). *Component Best Practices - Building reusable components*. React Native. https://reactnative.dev/docs/components-and-apis
+
+---
+
 ## 📄 License
 
 This project is part of an academic assignment for MAST5112.

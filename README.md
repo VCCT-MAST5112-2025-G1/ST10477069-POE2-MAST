@@ -342,9 +342,9 @@ Built with React Native, Expo, and modern mobile development best practices. Spe
 
 ##  Links
 
-- **GitHub Repository:** [ST10477069-POE2-MAST]()
+- **GitHub Repository:** [)
 - **Demo Video:** [YouTube Walkthrough](https://www.youtube.com/watch?v=LcuBP8kKpXU)
 
 ---
 
-**ST10477069 POE2**
+**OSAMAH KHALED AL_BATATI - ST10477069 - POE**
